@@ -1,6 +1,6 @@
 use plotly::common::{Marker, Mode, Title};
 use plotly::{Bar, Layout, Plot, Scatter};
-use plotly::layout::{Axis, LayoutGrid};
+use plotly::layout::{Axis, GridPattern, GridYSide, LayoutGrid};
 
 fn main() {
     // Define the data for the scatter plot
@@ -50,14 +50,21 @@ fn main() {
 
     let layout_grid = LayoutGrid::new()
         .rows(1)
-        .columns(2).sub_plots(vec!["x1", "x2"])
-        .y_axes(vec!["y1", "y2"]);
+        .columns(2)
+        .sub_plots(vec!["x1", "x2"])
+        .y_axes(vec!["y1", "y2"])
+        .pattern(GridPattern::Independent)
+        .y_side(GridYSide::Right);
 
     let layout = Layout::new()
         .title(Title::with_text("Subplots Example"))
         .grid(layout_grid).x_axis(Axis::new()
         .title(Title::with_text("X-axis")))
-        .y_axis(Axis::new().title(Title::with_text("Y-axis")));
+        .y_axis(Axis::new().title(Title::with_text("Y-axis")).overlaying("y1"))
+        .x_axis2(Axis::new().title(Title::with_text("X-axis-2")).overlaying("x2"))
+        .y_axis2(Axis::new().title(Title::with_text("Y-axis-2"))
+            .anchor("x2")
+            .overlaying("y2"));
 
 
     let mut plot = Plot::new();
@@ -71,7 +78,7 @@ fn main() {
     plot.set_layout(layout);
 
     plot.add_trace(Bar::new(vec!["A", "B", "C"], vec![4, 5, 6])
-        .name("Bars ").x_axis("x2"));
+        .name("Bars ").x_axis("x2").y_axis("y2"));
 
 
     plot.show();
