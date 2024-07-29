@@ -1,6 +1,6 @@
 use plotly::common::{Marker, Mode, Title};
 use plotly::{Bar, Layout, Plot, Scatter};
-use plotly::layout::Axis;
+use plotly::layout::{Axis, LayoutGrid};
 
 fn main() {
     // Define the data for the scatter plot
@@ -24,7 +24,7 @@ fn main() {
     plot.set_layout(layout);
 
     // Show the plot in the default browser
-    plot.show();
+    // plot.show();
 
     // Define the data for the bar chart
     let x_data = vec!["Apples", "Oranges", "Bananas"];
@@ -46,7 +46,35 @@ fn main() {
     plot.set_layout(layout2);
 
     // Show the plot in the default browser
-    plot.show();
+    // plot.show();
 
+    let layout_grid = LayoutGrid::new()
+        .rows(1)
+        .columns(2).sub_plots(vec!["x1", "x2"])
+        .y_axes(vec!["y1", "y2"]);
+
+    let layout = Layout::new()
+        .title(Title::with_text("Subplots Example"))
+        .grid(layout_grid).x_axis(Axis::new()
+        .title(Title::with_text("X-axis")))
+        .y_axis(Axis::new().title(Title::with_text("Y-axis")));
+
+
+    let mut plot = Plot::new();
+    plot.add_traces(vec![
+        Scatter::new(vec![1, 2, 3], vec![4, 5, 6]).name("V1"),
+    ]);
+
+    plot.add_trace(Scatter::new(vec![1, 2, 3], vec![9, 10, 11]).name("V2"));
+
+
+    plot.set_layout(layout);
+
+    plot.add_trace(Bar::new(vec!["A", "B", "C"], vec![4, 5, 6])
+        .name("Bars ").x_axis("x2"));
+
+
+    plot.show();
+    println!("Finish")
 
 }
